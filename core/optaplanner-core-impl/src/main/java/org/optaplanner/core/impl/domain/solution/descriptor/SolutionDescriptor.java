@@ -1061,8 +1061,12 @@ public class SolutionDescriptor<Solution_> {
     private int countUnassignedValues(Solution_ solution, ListVariableDescriptor<Solution_> variableDescriptor) {
         long totalValueCount = variableDescriptor.getValueCount(solution, null);
         MutableInt assignedValuesCount = new MutableInt();
-        visitAllEntities(solution,
-                entity -> assignedValuesCount.add(variableDescriptor.getListSize(entity)));
+        visitAllEntities(solution, entity -> {
+            try {
+                assignedValuesCount.add(variableDescriptor.getListSize(entity));
+            } catch (Exception ignored) {
+            }
+        });
         // TODO maybe detect duplicates and elements that are outside the value range
         return Math.toIntExact(totalValueCount - assignedValuesCount.intValue());
     }
